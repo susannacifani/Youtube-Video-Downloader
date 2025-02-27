@@ -1,6 +1,7 @@
 import os
 import sys
 import yt_dlp
+import time
 
 def get_download_folder():
     """Ottiene la cartella Download dell'utente in modo cross-platform."""
@@ -15,7 +16,12 @@ def download_video(video_url):
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        ydl.download([video_url])
+        info = ydl.extract_info(video_url, download=True)
+        filename = ydl.prepare_filename(info)  # Ottieni il nome del file scaricato
+
+        # Imposta manualmente la data di modifica a quella attuale
+        current_time = time.time()
+        os.utime(filename, (current_time, current_time))
 
 
 if __name__ == "__main__":
